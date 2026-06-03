@@ -221,6 +221,7 @@ def create_sglang_tts_engine_executor(
         "dtype": "bfloat16",
         "enable_torch_compile": True,
         "torch_compile_max_bs": 8,
+        "attention_backend": "torch_native",
         "random_seed": int.from_bytes(os.urandom(4), "little") & 0x7FFFFFFF,
     }
     if server_args_overrides:
@@ -232,8 +233,6 @@ def create_sglang_tts_engine_executor(
         **overrides,
     )
     server_args.disable_overlap_schedule = True
-    if getattr(server_args, "attention_backend", None) is None:
-        server_args.attention_backend = "triton"
 
     want_cuda_graph = not bool(getattr(server_args, "disable_cuda_graph", False))
     if want_cuda_graph:
