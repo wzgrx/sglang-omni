@@ -14,7 +14,7 @@ from typing import Callable, Optional
 
 import torch
 import torch.nn as nn
-from sgl_kernel.flash_attn import flash_attn_with_kvcache
+from flash_attn import flash_attn_with_kvcache
 
 # liger_kernel removed for inference
 from torch import Tensor
