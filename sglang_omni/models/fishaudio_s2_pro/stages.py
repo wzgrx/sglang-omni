@@ -214,13 +214,13 @@ def create_sglang_tts_engine_executor(
     patch_fish_config_for_sglang()
 
     overrides: dict[str, Any] = {
-        "disable_cuda_graph": False,
-        "mem_fraction_static": 0.85,
-        "max_running_requests": 64,
+        "disable_cuda_graph": True,
+        "mem_fraction_static": 0.80,
+        "max_running_requests": 32,
         "chunked_prefill_size": 8192,
         "dtype": "bfloat16",
         "enable_torch_compile": True,
-        "torch_compile_max_bs": 16,
+        "torch_compile_max_bs": 8,
         "random_seed": int.from_bytes(os.urandom(4), "little") & 0x7FFFFFFF,
     }
     if server_args_overrides:
@@ -233,7 +233,7 @@ def create_sglang_tts_engine_executor(
     )
     server_args.disable_overlap_schedule = True
     if getattr(server_args, "attention_backend", None) is None:
-        server_args.attention_backend = "fa3"
+        server_args.attention_backend = "triton"
 
     want_cuda_graph = not bool(getattr(server_args, "disable_cuda_graph", False))
     if want_cuda_graph:
